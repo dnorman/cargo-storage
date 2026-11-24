@@ -144,7 +144,13 @@ def main():
             for item in images:
                 if Path(item.get("image-path", "")) == image:
                     device = next(e["dev-entry"] for e in item["system-entities"] if "dev-entry" in e)
-                    run("/usr/bin/hdiutil", "detach", device)
+                    detached = subprocess.run(["/usr/bin/hdiutil", "detach", device],
+                                              capture_output=True, timeout=30)
+                    if detached.returncode:
+                        # macOS background scanners can briefly hold the test volume.
+                        # Force is confined to this image, created by this test; all
+                        # build processes and our watcher have already exited.
+                        run("/usr/bin/hdiutil", "detach", "-force", device)
 
 
 if __name__ == "__main__":
