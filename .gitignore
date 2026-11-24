@@ -1,0 +1,11 @@
+.build/
+__pycache__/
+*.pyc
+.DS_Store
+settings.json
+state/
+*.log
+*.sparseimage
+*.dmg
+verification/
+cargo-config.before-*
